@@ -1,1 +1,0 @@
-# BEEBRAIN_BL16FRX is a variant of BEEBRAIN_BL16F with frsky full-range receiver (Diversity, PA, LNA). 

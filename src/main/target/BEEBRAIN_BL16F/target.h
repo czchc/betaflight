@@ -20,7 +20,7 @@
 
 #pragma once
 
-#define TARGET_BOARD_IDENTIFIER         "BB16" // BeeBrain BL16
+#define TARGET_BOARD_IDENTIFIER         "BL16" // BeeBrain BL16
 #define USE_TARGET_CONFIG
 
 #define USBD_PRODUCT_STRING             "BeeBrain BL16"
@@ -77,7 +77,7 @@
 #define ACC_MPU6500_ALIGN               CW90_DEG
 
 // *************** RX ******************************
-#if defined(BEEBRAIN_BL16FRX)
+#if defined(BEEBRAIN_BL16F)
     #define USE_RX_SPI
     #define RX_SPI_INSTANCE             SPI2
     #define RX_SCK_PIN                  SPI2_SCK_PIN
@@ -97,13 +97,9 @@
     #define USE_RX_FRSKY_SPI_D
     #define USE_RX_FRSKY_SPI_X
 #else
-    #if defined(BEEBRAIN_BL16D)
-        #define SERIALRX_PROVIDER       SERIALRX_SPEKTRUM2048
-        #undef  USE_SPEKTRUM_REAL_RSSI
-        #undef  USE_SPEKTRUM_FAKE_RSSI
-    #else
-        #define SERIALRX_PROVIDER       SERIALRX_SBUS
-    #endif
+    #define SERIALRX_PROVIDER           SERIALRX_SPEKTRUM2048
+    #undef  USE_SPEKTRUM_REAL_RSSI
+    #undef  USE_SPEKTRUM_FAKE_RSSI
     #define DEFAULT_RX_FEATURE          FEATURE_RX_SERIAL
     #define SERIALRX_UART               SERIAL_PORT_USART2
 #endif
@@ -127,6 +123,8 @@
 #define USE_VTX_RTC6705_SOFTSPI
 #define RTC6705_SPI_MOSI_PIN            SPI3_MOSI_PIN
 #define RTC6705_SPICLK_PIN              SPI3_SCK_PIN
+#define USE_RTC6705_RF_PWR_CTRL
+#define VTX_RF_PWR_CTRL_PIN             PC15
 #define USE_RTC6705_SOFTSPI_ON_HW_SPI
 
 // *************** ADC *****************************
@@ -141,6 +139,10 @@
 // *************** OTHERS **************************
 #define LED0_PIN                        PC13
 #define LED1_PIN                        PC14
+
+#define USE_BEEPER
+#define BEEPER_PIN                      PA1
+#define BEEPER_PWM_HZ                   2200
 
 #define USE_ESCSERIAL
 #define USE_SERIAL_4WAY_BLHELI_INTERFACE

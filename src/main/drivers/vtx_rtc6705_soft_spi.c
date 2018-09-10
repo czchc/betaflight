@@ -77,6 +77,10 @@ static IO_t rtc6705DataPin = IO_NONE;
 static IO_t rtc6705CsnPin = IO_NONE;
 static IO_t rtc6705ClkPin = IO_NONE;
 
+#ifdef USE_RTC6705_RF_PWR_CTRL
+static IO_t rtc6705RfPwrCtrlPin = IO_NONE;
+#endif  // #ifdef USE_RTC6705_RF_PWR_CTRL
+
 void rtc6705IOInit(void)
 {
 #ifdef RTC6705_POWER_PIN
@@ -98,6 +102,12 @@ void rtc6705IOInit(void)
     IOInit(rtc6705ClkPin, OWNER_SPI_SCK, RESOURCE_SOFT_OFFSET);
     IOConfigGPIO(rtc6705ClkPin, IOCFG_OUT_PP);
 #endif
+
+#ifdef USE_RTC6705_RF_PWR_CTRL
+    rtc6705RfPwrCtrlPin = IOGetByTag(IO_TAG(VTX_RF_PWR_CTRL_PIN));
+    IOInit(rtc6705RfPwrCtrlPin, OWNER_VTX, 0);
+    IOConfigGPIO(rtc6705RfPwrCtrlPin, IOCFG_OUT_PP);
+#endif  // #ifdef USE_RTC6705_RF_PWR_CTRL
 
     // Important: The order of GPIO configuration calls are critical to ensure that incorrect signals are not briefly sent to the VTX.
     // GPIO bit is enabled so here so the CS/LE pin output is not pulled low when the GPIO is set in output mode.
@@ -157,9 +167,17 @@ void rtc6705SetFrequency(uint16_t channel_freq)
 
 void rtc6705SetRFPower(uint8_t rf_power)
 {
+#ifdef USE_RTC6705_RF_PWR_CTRL
+    if (rf_power > 1) {
+        IOHi(rtc6705RfPwrCtrlPin);
+    } else {
+        IOLo(rtc6705RfPwrCtrlPin);
+    }
+#else
     DISABLE_HW_SPI();
     rtc6705_write_register(7, (rf_power > 1 ? PA_CONTROL_DEFAULT : (PA_CONTROL_DEFAULT | PD_Q5G_MASK) & (~(PA5G_PW_MASK | PA5G_BS_MASK))));
     ENABLE_HW_SPI();
+#endif  // #ifdef USE_RTC6705_RF_PWR_CTRL
 }
 
 void rtc6705Disable(void)

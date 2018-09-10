@@ -55,14 +55,6 @@
 
 #include "telemetry/telemetry.h"
 
-#if defined(BEEBRAIN_BL16FRX)
-    // Remove after test
-    // T8SG
-    #define DEFAULT_TX_BIND_OFFSET          -42
-    #define DEFAULT_TX_BIND_ID0             0
-    #define DEFAULT_TX_BIND_ID1             191
-#endif
-
 void targetConfiguration(void)
 {
     osdConfigMutable()->item_pos[OSD_CRAFT_NAME]        = OSD_POS(9, 11)  | VISIBLE_FLAG;
@@ -87,17 +79,5 @@ void targetConfiguration(void)
     modeActivationConditionsMutable(1)->range.endStep    = CHANNEL_VALUE_TO_STEP(2100);
 
     strcpy(pilotConfigMutable()->name, "BeeBrain");
-
-    #if defined(BEEBRAIN_BL16FRX)
-    do {
-        uint8_t defaultTXHopTable[50] = {0,30,60,91,120,150,180,210,5,35,65,95,125,155,185,215,10,40,70,100,130,160,190,221,15,45,75,105,135,165,195,225,20,50,80,110,140,170,200,230,25,55,85,115,145,175,205,0,0,0};
-        rxFrSkySpiConfigMutable()->bindOffset  = DEFAULT_TX_BIND_OFFSET;
-        rxFrSkySpiConfigMutable()->bindTxId[0] = DEFAULT_TX_BIND_ID0;
-        rxFrSkySpiConfigMutable()->bindTxId[1] = DEFAULT_TX_BIND_ID1;
-        for (uint8_t i = 0; i < 50; i++) {
-            rxFrSkySpiConfigMutable()->bindHopData[i] = defaultTXHopTable[i];
-        }
-    } while (0);
-    #endif
 }
 #endif
